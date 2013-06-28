@@ -25,19 +25,14 @@ def make_text(chains):
 
     link = choice(chains.keys())
     next_link = 'the'
-    print 'link:', link
     text = list(link)
-    print 'text:', text
 
     while link in chains or (next_link[-1] not in ('!','.','?')):
         next_link = choice(chains[link])
         text.append(next_link)
-        # text.append(convert[:]) # append convert to random text
-        print 'text:', text # " ".join(random_text)
-        link = (link[-1],next_link) #reassign link and repeat while loop
-        print "Reassigning link", link
+        link = (link[len(link)],next_link) #reassign link and repeat while loop
 
-    print " ".join(text)
+    return " ".join(text)
 
 new_text = """
     I am lost.

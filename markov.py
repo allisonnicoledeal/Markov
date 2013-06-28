@@ -2,6 +2,7 @@
 
 import sys
 from random import choice
+from re import sub
 
 
 def make_chains(corpus, number):
@@ -31,18 +32,28 @@ def make_text(chains):
     next_link = 'the'
     text = list(link)
 
-    while link in chains or (next_link[-1] not in ('!','.','?')):
+    while len(text) < 141 or (next_link[-1] not in ('!','.','?')):
         next_link = choice(chains[link])
         text.append(next_link)
-        # text.append(convert[:]) # append convert to random text
-        link = (link[-1],next_link) #reassign link and repeat while loop
+        link = (link[len(link)-1],next_link)
 
     return " ".join(text)
 
 def make_tweet(text):
-    tweet = text[-140:]
-    cap_it = tweet[0].capitalize()
-    return cap_it + tweet[1:]
+    words = text[-140:]
+    tweet = sub("[\"()-]", '', words)
+
+    for t in range(len(tweet)):
+        if tweet[t] == ' ':
+            no_space = tweet[t+1:]
+            break
+        else:
+            continue
+
+    char = no_space[0]
+    cap_it = char.capitalize()
+
+    return cap_it + no_space[1:]
 
 def main():
     script, filename, num_words = sys.argv
