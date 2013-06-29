@@ -3,7 +3,7 @@
 import sys
 from random import choice
 from re import sub
-
+from markov_twitter import make_tweet
 
 def make_chains(corpus, number):
     """Takes an input text as a string and returns a dictionary of
@@ -24,7 +24,7 @@ def make_chains(corpus, number):
                 # w+num_words-th item in text_list to value list
     return d
 
-def make_text(chains):
+def make_text(chains, string_len=141):
     """Takes a dictionary of markov chains and returns random text
     based off an original text."""
 
@@ -32,31 +32,15 @@ def make_text(chains):
     next_link = 'the'
     text = list(link)
 
-    while len(text) < 141 or (next_link[-1] not in ('!','.','?')):
+    while len(text) < string_len or (next_link[-1] not in ('!','.','?')):
         next_link = choice(chains[link])
         text.append(next_link)
         link = (link[len(link)-1],next_link)
 
     return " ".join(text)
 
-def make_tweet(text):
-    words = text[-140:]
-    tweet = sub("[\"()-]", '', words)
-
-    for t in range(len(tweet)):
-        if tweet[t] == ' ':
-            no_space = tweet[t+1:]
-            break
-        else:
-            continue
-
-    char = no_space[0]
-    cap_it = char.capitalize()
-
-    return cap_it + no_space[1:]
-
 def main():
-    script, filename, num_words = sys.argv
+    script, filename, num_words = sys.argv  # Add default string_len value.
     f = open(filename)
     input_text = f.read()
     f.close() 
@@ -64,18 +48,6 @@ def main():
     chain_dict = make_chains(input_text, num_words)
     random_text = make_text(chain_dict)
     tweet = make_tweet(random_text)
-    print tweet
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
